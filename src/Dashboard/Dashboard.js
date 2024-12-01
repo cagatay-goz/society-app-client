@@ -20,6 +20,11 @@ function Dashboard() {
             name: "Sports Club",
             description: "For those who love sports and fitness activities.",
         },
+        {
+            id: 4,
+            name: "Cycling Club",
+            description: "For those who love cycling and nature.",
+        },
     ];
 
     return (
