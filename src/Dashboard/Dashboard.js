@@ -1,9 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Added Link import for routing
 import SocietyCard from "./SocietyCard";
 import "./Dashboard.css";
 
 function Dashboard() {
-    /*Example Societies -To be changed- */
+    /* Example Societies -To be changed- */
     const societies = [
         {
             id: 1,
@@ -34,11 +35,13 @@ function Dashboard() {
             </div>
             <div className="society-grid">
                 {societies.map((society) => (
-                    <SocietyCard
-                        key={society.id}
-                        name={society.name}
-                        description={society.description}
-                    />
+                    <Link to={`/society/${society.id}`} key={society.id}> {/* Use Link for routing */}
+                        <SocietyCard
+                            id={society.id}
+                            name={society.name}
+                            description={society.description}
+                        />
+                    </Link>
                 ))}
             </div>
         </div>

@@ -1,12 +1,15 @@
 import React from "react";
 import "./Dashboard.css";
+import { Link } from "react-router-dom";
 
-function SocietyCard({ name, description }) {
+function SocietyCard({ id, name, description }) {
     return (
         <div className="society-card">
             <h2>{name}</h2>
             <p>{description}</p>
-            <button className="visit-button">Visit Society</button>
+            <Link to={`/society/${id}`}>
+                <button className="visit-button">Visit</button>
+            </Link>
         </div>
     );
 }
