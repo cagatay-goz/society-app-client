@@ -10,13 +10,13 @@ import Footer from './Common/Footer';
 function App() {
     return (
         <Router>
-            {/* Always render Header and Footer */}
+            {}
             <Header />
             <div className="main-content">
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/" element={<Dashboard />} />
                     <Route path="/society/:id" element={<SocietyPage />} />
                 </Routes>
             </div>
