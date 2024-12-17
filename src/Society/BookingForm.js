@@ -20,7 +20,7 @@ function BookingForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Booking request submitted:", formData);
-        // continue:  send the request to the admin
+        // continue: send the request to the admin
     };
 
     return (
