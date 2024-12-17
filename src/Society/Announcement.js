@@ -1,14 +1,16 @@
 import React from "react";
 import "./Society.css";
 
-function Announcement({ title, content, poster }) {
+function Announcement({ eventName, description, eventDate, location, poster }) {
     return (
         <div className="announcement-card">
             <div className="announcement-poster">
-                <img src={poster} alt={title} />
+                <img src={poster} alt={eventName} />
             </div>
-            <h3>{title}</h3>
-            <p>{content}</p>
+            <h3>{eventName}</h3>
+            <p>{description}</p>
+            <p><strong>Date:</strong> {eventDate}</p>
+            <p><strong>Location:</strong> {location}</p>
         </div>
     );
 }

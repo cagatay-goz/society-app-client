@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Announcement from "./Announcement";
 import "./Society.css";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function SocietyPage() {
-    const { id } = useParams(); // Get the society id from the URL
-    const [society, setSociety] = useState(null); // State to store society data
+    const { id } = useParams(); // get the society id from the URL
+    const [society, setSociety] = useState(null);
 
-    // Simulate fetching data from a database or API based on the society ID
+    // edit: fetch data from database
     useEffect(() => {
         const societies = [
             {
@@ -17,14 +17,18 @@ function SocietyPage() {
                 announcements: [
                     {
                         id: 1,
-                        title: "Hackathon 2024",
-                        content: "Join us for the annual hackathon on Jan 15th!",
+                        eventName: "Hackathon 2024",
+                        description: "Join us for the annual hackathon on Jan 15th!",
+                        eventDate: "2024-01-15",
+                        location: "Main Auditorium",
                         poster: "https://via.placeholder.com/300x200?text=Hackathon+Poster"
                     },
                     {
                         id: 2,
-                        title: "Weekly Meetup",
-                        content: "Next meetup is on Friday, Dec 8th.",
+                        eventName: "Weekly Meetup",
+                        description: "Next meetup is on Friday, Dec 8th.",
+                        eventDate: "2023-12-08",
+                        location: "Room 202",
                         poster: "https://via.placeholder.com/300x200?text=Meetup+Poster"
                     }
                 ]
@@ -36,8 +40,10 @@ function SocietyPage() {
                 announcements: [
                     {
                         id: 1,
-                        title: "Art Exhibit",
-                        content: "Join us for the annual art exhibit on Dec 12th!",
+                        eventName: "Art Exhibit",
+                        description: "Join us for the annual art exhibit on Dec 12th!",
+                        eventDate: "2023-12-12",
+                        location: "Gallery 5",
                         poster: "https://via.placeholder.com/300x200?text=Art+Exhibit"
                     }
                 ]
@@ -56,12 +62,11 @@ function SocietyPage() {
             }
         ];
 
-        // Find the society data by id
+        // Find society data by id
         const foundSociety = societies.find(society => society.id === parseInt(id));
-        setSociety(foundSociety); // Set the state with the fetched society data
-    }, [id]); // Run this effect when the id changes
+        setSociety(foundSociety);
+    }, [id]);
 
-    // If the society data hasn't been fetched yet, show loading
     if (!society) {
         return <div>Loading...</div>;
     }
@@ -75,14 +80,25 @@ function SocietyPage() {
             <div className="announcements-section">
                 <h2>Announcements</h2>
                 <div className="announcements-container">
-                    {society.announcements.map((announcement) => (
-                        <Announcement
-                            key={announcement.id}
-                            title={announcement.title}
-                            content={announcement.content}
-                            poster={announcement.poster}
-                        />
-                    ))}
+                    {society.announcements.length > 0 ? (
+                        society.announcements.map((announcement) => (
+                            <div key={announcement.id} className="announcement-item">
+                                <Announcement
+                                    eventName={announcement.eventName}
+                                    description={announcement.description}
+                                    eventDate={announcement.eventDate}
+                                    location={announcement.location}
+                                    poster={announcement.poster}
+                                />
+                                {/* Link for society president to edit event */}
+                                <Link to={`/society/${id}/edit-event/${announcement.id}`} className="edit-event-link">
+                                    Edit Event
+                                </Link>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No announcements available. Please add some events.</p>
+                    )}
                 </div>
             </div>
         </div>
