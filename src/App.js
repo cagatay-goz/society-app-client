@@ -6,6 +6,10 @@ import Dashboard from "./Dashboard/Dashboard";
 import SocietyPage from "./Society/SocietyPage";
 import Header from './Common/Header';
 import Footer from './Common/Footer';
+import BookingForm from "./Society/BookingForm";
+import AdminPage from "./Society/AdminPage";
+import AnnouncementForm from "./Society/AnnouncementForm";
+import EditEvent from "./Society/EditEvent";
 
 function App() {
     return (
@@ -14,10 +18,14 @@ function App() {
             <Header />
             <div className="main-content">
                 <Routes>
+                    <Route path="/" element={<Dashboard />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
-                    <Route path="/" element={<Dashboard />} />
                     <Route path="/society/:id" element={<SocietyPage />} />
+                    <Route path="/bookingForm" element={<BookingForm />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/announcementForm" element={<AnnouncementForm />} />
+                    <Route path="/society/:id/edit-event/:eventId" element={<EditEvent />} /> {}
                 </Routes>
             </div>
             <Footer />
