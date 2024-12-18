@@ -1,7 +1,7 @@
 import React from "react";
 import "./Society.css";
 
-function Announcement({ eventName, description, eventDate, location, poster }) {
+function AnnouncementCard({ eventName, description, eventDate, location, poster }) {
     return (
         <div className="announcement-card">
             <div className="announcement-poster">
@@ -15,4 +15,4 @@ function Announcement({ eventName, description, eventDate, location, poster }) {
     );
 }
 
-export default Announcement;
+export default AnnouncementCard;

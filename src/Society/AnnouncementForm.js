@@ -19,7 +19,7 @@ function AnnouncementForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Announcement posted:", announcement);
+        console.log("AnnouncementCard posted:", announcement);
         // continue: send data to backend to store it in database
     };
 

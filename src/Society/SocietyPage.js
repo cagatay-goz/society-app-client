@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Announcement from "./Announcement";
+import AnnouncementCard from "./AnnouncementCard";
 import "./Society.css";
 import { Link, useParams } from "react-router-dom";
 
@@ -83,7 +83,7 @@ function SocietyPage() {
                     {society.announcements.length > 0 ? (
                         society.announcements.map((announcement) => (
                             <div key={announcement.id} className="announcement-item">
-                                <Announcement
+                                <AnnouncementCard
                                     eventName={announcement.eventName}
                                     description={announcement.description}
                                     eventDate={announcement.eventDate}
