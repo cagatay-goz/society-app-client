@@ -18,7 +18,7 @@ function AdminPage() {
             societyName: "Art Society",
             eventName: "Art Exhibition",
             eventDate: "2024-12-30",
-            eventTime: "16:00",
+            eventTime: "17:00",
             location: "Seminar Hall, CCC",
             status: "Pending",
         },

@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./Auth/Login";
-import Signup from "./Auth/signup";
+import Signup from "./Auth/Signup";
 import Dashboard from "./Dashboard/Dashboard";
 import SocietyPage from "./Society/SocietyPage";
 import Header from './Common/Header';
@@ -9,12 +9,11 @@ import Footer from './Common/Footer';
 import BookingForm from "./Society/BookingForm";
 import AdminPage from "./Society/AdminPage";
 import AnnouncementForm from "./Society/AnnouncementForm";
-import EditEvent from "./Society/EditEvent";
+//import EditEvent from "./Society/EditEvent";
 
 function App() {
     return (
         <Router>
-            {}
             <Header />
             <div className="main-content">
                 <Routes>
@@ -25,7 +24,7 @@ function App() {
                     <Route path="/bookingForm" element={<BookingForm />} />
                     <Route path="/admin" element={<AdminPage />} />
                     <Route path="/announcementForm" element={<AnnouncementForm />} />
-                    <Route path="/society/:id/edit-event/:eventId" element={<EditEvent />} /> {}
+                    {/*<Route path="/society/:id/edit-event/:eventId" element={<EditEvent />} />*/}
                 </Routes>
             </div>
             <Footer />
