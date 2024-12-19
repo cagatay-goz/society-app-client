@@ -24,7 +24,7 @@ function App() {
                     <Route path="/bookingForm" element={<BookingForm/>}/>
                     <Route path="/admin" element={<AdminPage/>}/>
                     <Route path="/announcementForm" element={<AnnouncementForm/>}/>
-                    {/*<Route path="/society/:id/edit-event/:eventId" element={<EditEvent />} />*/}
+                    <Route path="/society/:id/edit-event/:eventId" element={<EditEvent />} />
                 </Routes>
             </div>
             <Footer />
