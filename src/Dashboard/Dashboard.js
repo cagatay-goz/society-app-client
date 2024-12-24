@@ -1,32 +1,35 @@
-import React from "react";
-import { Link } from "react-router-dom"; // Added Link import for routing
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import SocietyCard from "./SocietyCard";
+import { fetchSocieties } from "../services/api";
 import "./Dashboard.css";
 
 function Dashboard() {
-    /* Example Societies -To be changed- */
-    const societies = [
-        {
-            id: 1,
-            name: "Coding Club",
-            description: "A community for coding enthusiasts to share and grow.",
-        },
-        {
-            id: 2,
-            name: "Art Society",
-            description: "Where creativity meets expression.",
-        },
-        {
-            id: 3,
-            name: "Sports Club",
-            description: "For those who love sports and fitness activities.",
-        },
-        {
-            id: 4,
-            name: "Cycling Club",
-            description: "For those who love cycling and nature.",
-        },
-    ];
+    const [societies, setSocieties] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const getSocieties = async () => {
+            try {
+                const data = await fetchSocieties();
+                setSocieties(data.reverse()); // Listeyi ters çeviriyoruz
+            } catch (err) {
+                setError("Societies could not be fetched.");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getSocieties();
+    }, []);
+
+    if (loading) return <div>Loading societies...</div>;
+    if (error) return <div>{error}</div>;
+    if (!loading && societies.length === 0) {
+        return <div>No societies found.</div>;
+    }
 
     return (
         <div className="dashboard-container">
@@ -35,7 +38,13 @@ function Dashboard() {
             </div>
             <div className="society-grid">
                 {societies.map((society) => (
-                    <Link to={`/society/${society.id}`} key={society.id}> {/* Use Link for routing */}
+                    <Link
+                        to={{
+                            pathname: `/society/${society.id}`,
+                            state: { society }, // State ile society bilgisi gönderiliyor
+                        }}
+                        key={society.id}
+                    >
                         <SocietyCard
                             id={society.id}
                             name={society.name}

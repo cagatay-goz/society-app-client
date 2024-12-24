@@ -1,16 +1,24 @@
 import React from "react";
-import "./Society.css";
 
-function AnnouncementCard({ eventName, description, eventDate, location, poster }) {
+function AnnouncementCard({ title, content, date, location, poster_url }) {
     return (
         <div className="announcement-card">
-            <div className="announcement-poster">
-                <img src={poster} alt={eventName} />
-            </div>
-            <h3>{eventName}</h3>
-            <p>{description}</p>
-            <p><strong>Date:</strong> {eventDate}</p>
-            <p><strong>Location:</strong> {location}</p>
+            <h3>{title}</h3>
+            <p>{content}</p>
+            <p>
+                <strong>Date:</strong>{" "}
+                {date ? new Date(date).toLocaleDateString() : "No date provided"}
+            </p>
+            <p>
+                <strong>Location:</strong> {location || "No location provided"}
+            </p>
+            {poster_url && (
+                <img
+                    src={poster_url}
+                    alt={title}
+                    style={{ width: "200px", height: "auto", marginTop: "10px" }}
+                />
+            )}
         </div>
     );
 }

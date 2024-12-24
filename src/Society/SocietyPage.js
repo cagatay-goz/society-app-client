@@ -1,105 +1,81 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import { fetchAnnouncementsBySocietyId, fetchSocieties } from "../services/api";
 import AnnouncementCard from "./AnnouncementCard";
 import "./Society.css";
-import { Link, useParams } from "react-router-dom";
 
 function SocietyPage() {
-    const { id } = useParams(); // get the society id from the URL
-    const [society, setSociety] = useState(null);
+    const { id } = useParams(); // URL'deki society ID'yi al
+    const { state } = useLocation(); // Dashboard'dan gelen state
+    const [society, setSociety] = useState(state?.society || null); // State üzerinden gelen veya null
+    const [announcements, setAnnouncements] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // edit: fetch data from database
+    // Society bilgisini API'den çek (state yoksa)
     useEffect(() => {
-        const societies = [
-            {
-                id: 1,
-                name: "Coding Club",
-                description: "A community for coding enthusiasts to share and grow.",
-                announcements: [
-                    {
-                        id: 1,
-                        eventName: "Hackathon 2024",
-                        description: "Join us for the annual hackathon on Jan 15th!",
-                        eventDate: "2024-01-15",
-                        location: "Main Auditorium",
-                        poster: "https://via.placeholder.com/300x200?text=Hackathon+Poster"
-                    },
-                    {
-                        id: 2,
-                        eventName: "Weekly Meetup",
-                        description: "Next meetup is on Friday, Dec 8th.",
-                        eventDate: "2023-12-08",
-                        location: "Room 202",
-                        poster: "https://via.placeholder.com/300x200?text=Meetup+Poster"
+        const fetchSocietyIfNeeded = async () => {
+            if (!society) {
+                try {
+                    const societies = await fetchSocieties(); // Tüm societies bilgisi çekiliyor
+                    const matchedSociety = societies.find((s) => s.id === parseInt(id));
+                    if (matchedSociety) {
+                        setSociety(matchedSociety);
+                    } else {
+                        setError("Society not found.");
                     }
-                ]
-            },
-            {
-                id: 2,
-                name: "Art Society",
-                description: "Where creativity meets expression.",
-                announcements: [
-                    {
-                        id: 1,
-                        eventName: "Art Exhibit",
-                        description: "Join us for the annual art exhibit on Dec 12th!",
-                        eventDate: "2023-12-12",
-                        location: "Gallery 5",
-                        poster: "https://via.placeholder.com/300x200?text=Art+Exhibit"
-                    }
-                ]
-            },
-            {
-                id: 3,
-                name: "Sports Club",
-                description: "For those who love sports and fitness activities.",
-                announcements: []
-            },
-            {
-                id: 4,
-                name: "Cycling Club",
-                description: "For those who love cycling and nature.",
-                announcements: []
+                } catch (err) {
+                    setError("Could not fetch society information.");
+                }
             }
-        ];
+        };
 
-        // Find society data by id
-        const foundSociety = societies.find(society => society.id === parseInt(id));
-        setSociety(foundSociety);
+        fetchSocietyIfNeeded();
+    }, [id, society]);
+
+    useEffect(() => {
+        const fetchAnnouncements = async () => {
+            try {
+                const data = await fetchAnnouncementsBySocietyId(id);
+                setAnnouncements(data);
+            } catch (err) {
+                setError("Could not fetch announcements.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAnnouncements();
     }, [id]);
 
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
+
     if (!society) {
-        return <div>Loading...</div>;
+        return <div>Error: Society information is not available. Please go back to the dashboard.</div>;
     }
 
     return (
         <div className="society-page">
             <header className="society-header">
                 <h1>{society.name}</h1>
-                <p>{society.description}</p>
+                <p>{society.description || "No description available."}</p>
             </header>
             <div className="announcements-section">
-                <h2>Announcements</h2>
-                <div className="announcements-container">
-                    {society.announcements.length > 0 ? (
-                        society.announcements.map((announcement) => (
-                            <div key={announcement.id} className="announcement-item">
-                                <AnnouncementCard
-                                    eventName={announcement.eventName}
-                                    description={announcement.description}
-                                    eventDate={announcement.eventDate}
-                                    location={announcement.location}
-                                    poster={announcement.poster}
-                                />
-                                {/* Link for society president to edit event */}
-                                <Link to={`/society/${id}/edit-event/${announcement.id}`} className="edit-event-link">
-                                    Edit Event
-                                </Link>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No announcements available. Please add some events.</p>
-                    )}
-                </div>
+                {announcements.length > 0 ? (
+                    announcements.map((announcement) => (
+                        <AnnouncementCard
+                            key={announcement.id}
+                            title={announcement.title}
+                            content={announcement.content}
+                            date={announcement.date}
+                            location={announcement.location}
+                            poster_url={announcement.posterUrl}
+                        />
+                    ))
+                ) : (
+                    <p>No announcements available.</p>
+                )}
             </div>
         </div>
     );
