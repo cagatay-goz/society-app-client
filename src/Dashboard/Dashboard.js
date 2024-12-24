@@ -13,7 +13,7 @@ function Dashboard() {
         const getSocieties = async () => {
             try {
                 const data = await fetchSocieties();
-                setSocieties(data.reverse()); // Listeyi ters çeviriyoruz
+                setSocieties(data.reverse()); // Reverse the list
             } catch (err) {
                 setError("Societies could not be fetched.");
                 console.error(err);
@@ -41,7 +41,7 @@ function Dashboard() {
                     <Link
                         to={{
                             pathname: `/society/${society.id}`,
-                            state: { society }, // State ile society bilgisi gönderiliyor
+                            state: { society }, // Send society information with state
                         }}
                         key={society.id}
                     >

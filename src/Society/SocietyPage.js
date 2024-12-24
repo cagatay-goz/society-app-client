@@ -5,19 +5,19 @@ import AnnouncementCard from "./AnnouncementCard";
 import "./Society.css";
 
 function SocietyPage() {
-    const { id } = useParams(); // URL'deki society ID'yi al
-    const { state } = useLocation(); // Dashboard'dan gelen state
-    const [society, setSociety] = useState(state?.society || null); // State üzerinden gelen veya null
+    const { id } = useParams(); // Get the society ID from the URL
+    const { state } = useLocation(); // State passed from the Dashboard
+    const [society, setSociety] = useState(state?.society || null); // Use the state if available, or set to null
     const [announcements, setAnnouncements] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Society bilgisini API'den çek (state yoksa)
+    // Fetch society information from the API if state is not available
     useEffect(() => {
         const fetchSocietyIfNeeded = async () => {
             if (!society) {
                 try {
-                    const societies = await fetchSocieties(); // Tüm societies bilgisi çekiliyor
+                    const societies = await fetchSocieties(); // Fetch all societies
                     const matchedSociety = societies.find((s) => s.id === parseInt(id));
                     if (matchedSociety) {
                         setSociety(matchedSociety);
@@ -33,6 +33,7 @@ function SocietyPage() {
         fetchSocietyIfNeeded();
     }, [id, society]);
 
+    // Fetch announcements for the society
     useEffect(() => {
         const fetchAnnouncements = async () => {
             try {
