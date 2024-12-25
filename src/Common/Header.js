@@ -86,6 +86,11 @@ function Header() {
                                             Society
                                         </Link>
                                     </li>
+                                    <li>
+                                        <Link to={`/join-requests`}>
+                                            Requests
+                                        </Link>
+                                    </li>
                                 </>
                             )}
                             <li>

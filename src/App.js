@@ -11,6 +11,7 @@ import AdminPage from "./Society/AdminPage";
 import AnnouncementForm from "./Society/AnnouncementForm";
 import EditEvent from "./Society/EditEvent";
 import SocietyAddForm from "./Society/SocietyAddForm";
+import JoinRequestsPage from "./Society/JoinRequestsPage";
 
 function App() {
     return (
@@ -27,6 +28,7 @@ function App() {
                     <Route path="/admin" element={<AdminPage/>}/>
                     <Route path="/announcementForm" element={<AnnouncementForm/>}/>
                     <Route path="/society/:id/edit-event/:eventId" element={<EditEvent />} />
+                    <Route path="/join-requests" element={<JoinRequestsPage/>} />
                 </Routes>
             </div>
             <Footer />
