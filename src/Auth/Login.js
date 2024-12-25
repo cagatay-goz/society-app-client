@@ -1,14 +1,31 @@
 import React, { useState } from 'react';
 import './auth.css';
+import axiosInstance from '../services/axiosInstance';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // Add your login logic here
-        console.log("Logging in with:", { email, password });
+    
+        try {
+            const userLoginDTO = { email, password };
+    
+            const response = await axiosInstance.post("/api/auth/login", userLoginDTO);
+            const { token, email: userEmail } = response.data;
+    
+            localStorage.setItem("authToken", token);
+    
+            alert(`Welcome, ${userEmail}!`);
+        } catch (error) {
+            console.error("Error during login:", error.message);
+            if (error.response) {
+                alert(`Login failed: ${error.response.data.message}`);
+            } else {
+                alert("Login failed. Please try again later.");
+            }
+        }
     };
 
     return (

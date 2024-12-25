@@ -12,7 +12,6 @@ function SocietyPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch society information from the API if state is not available
     useEffect(() => {
         const fetchSocietyIfNeeded = async () => {
             if (!society) {

@@ -16,7 +16,8 @@ const Signup = () => {
         
         try {
             const userRegistrationDTO = { email, password };
-    
+            
+            localStorage.clear();
             const response = await axiosInstance.post("/api/auth/signup", userRegistrationDTO);
     
             alert("Signup successful!");
