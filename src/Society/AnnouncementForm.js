@@ -4,7 +4,7 @@ import "./AnnouncementForm.css";
 
 function AnnouncementForm() {
     const [announcement, setAnnouncement] = useState({
-        SocietyId: "",
+        societyId: "", // Fixed naming for consistency
         title: "",
         content: "",
         date: "",
@@ -16,27 +16,28 @@ function AnnouncementForm() {
     ); // Default URL is set
 
     const handleChange = (e) => {
-        setAnnouncement({
-            ...announcement,
-            [e.target.name]: e.target.value,
-        });
+        const { name, value } = e.target;
+        setAnnouncement((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+        setFile(e.target.files[0]); // Handling single file upload
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append("SocietyId", announcement.SocietyId);
+        formData.append("societyId", announcement.societyId); // Ensure backend matches 'societyId'
         formData.append("title", announcement.title);
         formData.append("content", announcement.content);
         formData.append("date", announcement.date);
         formData.append("location", announcement.location);
         if (file) {
-            formData.append("file", file);
+            formData.append("file", file); // Append file if provided
         }
 
         try {
@@ -44,11 +45,12 @@ function AnnouncementForm() {
             console.log("Announcement created successfully:", data);
             alert("Announcement posted successfully!");
 
-            // Set the AWS S3 URL
+            // Update the image URL if the backend provides it
             if (data.posterUrl) {
                 setImageUrl(data.posterUrl);
             }
         } catch (error) {
+            console.error("Error posting announcement:", error);
             alert("Failed to post the announcement.");
         }
     };
@@ -56,55 +58,68 @@ function AnnouncementForm() {
     return (
         <div className="announcement-form">
             <h2>Post New Announcement</h2>
-            <form onSubmit={handleSubmit}>
-                <label>Society ID</label>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+                <label htmlFor="societyId">Society ID</label>
                 <input
                     type="text"
-                    name="SocietyId"
-                    value={announcement.SocietyId}
+                    id="societyId"
+                    name="societyId"
+                    value={announcement.societyId}
                     onChange={handleChange}
                     placeholder="Enter society ID"
+                    required
                 />
-                <label>Event Name</label>
+                <label htmlFor="title">Event Name</label>
                 <input
                     type="text"
+                    id="title"
                     name="title"
                     value={announcement.title}
                     onChange={handleChange}
                     placeholder="Enter event name"
+                    required
                 />
-                <label>Poster Image</label>
+                <label htmlFor="file">Poster Image</label>
                 <input
                     type="file"
+                    id="file"
                     name="file"
                     onChange={handleFileChange}
+                    accept="image/*"
                 />
-                <label>Description</label>
+                <label htmlFor="content">Description</label>
                 <textarea
+                    id="content"
                     name="content"
                     value={announcement.content}
                     onChange={handleChange}
                     placeholder="Enter event description"
+                    rows="5"
+                    required
                 ></textarea>
-                <label>Event Date</label>
+                <label htmlFor="date">Event Date</label>
                 <input
-                    type="date"
+                    type="datetime-local"
+                    id="date"
                     name="date"
                     value={announcement.date}
                     onChange={handleChange}
+                    required
                 />
-                <label>Location</label>
+                <label htmlFor="location">Location</label>
                 <input
                     type="text"
+                    id="location"
                     name="location"
                     value={announcement.location}
                     onChange={handleChange}
                     placeholder="Enter event location"
+                    required
                 />
                 <button type="submit">Save</button>
             </form>
 
-            {/* Image tag to display the uploaded image */}
+            {/* Display uploaded image */}
             {imageUrl && (
                 <div className="uploaded-image">
                     <h3>Uploaded Poster:</h3>
