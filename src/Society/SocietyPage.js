@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { fetchAnnouncementsBySocietyId, fetchSocieties, deleteAnnouncementById } from "../services/api";
+import { useParams, useLocation } from "react-router-dom";
+import { fetchAnnouncementsBySocietyId, fetchSocieties } from "../services/api";
 import AnnouncementCard from "./AnnouncementCard";
 import "./Society.css";
 
 function SocietyPage() {
     const { id } = useParams(); // Get the society ID from the URL
     const { state } = useLocation(); // State passed from the Dashboard
-    const navigate = useNavigate();
     const [society, setSociety] = useState(state?.society || null); // Use the state if available, or set to null
     const [announcements, setAnnouncements] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Fetch society information from the API if state is not available
     useEffect(() => {
         const fetchSocietyIfNeeded = async () => {
             if (!society) {
@@ -38,9 +38,7 @@ function SocietyPage() {
         const fetchAnnouncements = async () => {
             try {
                 const data = await fetchAnnouncementsBySocietyId(id);
-
-                // Reverse the announcements array to show the latest at the top
-                setAnnouncements([...data].reverse());
+                setAnnouncements(data);
             } catch (err) {
                 setError("Could not fetch announcements.");
             } finally {
@@ -50,23 +48,6 @@ function SocietyPage() {
 
         fetchAnnouncements();
     }, [id]);
-
-    const handleEditEvent = (eventId) => {
-        navigate(`/society/${id}/edit-event/${eventId}`); // Redirect to the EditEvent page
-    };
-
-    const handleDeleteAnnouncement = async (announcementId) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this announcement?");
-        if (!confirmDelete) return;
-
-        try {
-            await deleteAnnouncementById(announcementId); // API çağrısı
-            setAnnouncements((prev) => prev.filter((announcement) => announcement.id !== announcementId)); // State'i güncelle
-            alert("Announcement deleted successfully!");
-        } catch (err) {
-            alert("Failed to delete the announcement.");
-        }
-    };
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -84,29 +65,14 @@ function SocietyPage() {
             <div className="announcements-section">
                 {announcements.length > 0 ? (
                     announcements.map((announcement) => (
-                        <div key={announcement.id} className="announcement-container">
-                            <AnnouncementCard
-                                title={announcement.title}
-                                content={announcement.content}
-                                date={announcement.date}
-                                location={announcement.location}
-                                poster_url={announcement.posterUrl}
-                            />
-                            <div className="announcement-buttons">
-                                <button
-                                    className="edit-event-btn"
-                                    onClick={() => handleEditEvent(announcement.id)}
-                                >
-                                    Edit Event
-                                </button>
-                                <button
-                                    className="delete-event-btn"
-                                    onClick={() => handleDeleteAnnouncement(announcement.id)}
-                                >
-                                    Delete Announcement
-                                </button>
-                            </div>
-                        </div>
+                        <AnnouncementCard
+                            key={announcement.id}
+                            title={announcement.title}
+                            content={announcement.content}
+                            date={announcement.date}
+                            location={announcement.location}
+                            poster_url={announcement.posterUrl}
+                        />
                     ))
                 ) : (
                     <p>No announcements available.</p>

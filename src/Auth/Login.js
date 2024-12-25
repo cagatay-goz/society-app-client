@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './auth.css';
 import axiosInstance from '../services/axiosInstance';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate(); // Initialize the navigate function
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -18,6 +20,7 @@ const Login = () => {
             localStorage.setItem("authToken", token);
     
             alert(`Welcome, ${userEmail}!`);
+            navigate("/"); // Redirect to the dashboard page
         } catch (error) {
             console.error("Error during login:", error.message);
             if (error.response) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SocietyCard from "./SocietyCard";
 import { fetchSocieties } from "../services/api";
 import "./Dashboard.css";
@@ -8,8 +8,10 @@ function Dashboard() {
     const [societies, setSocieties] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
+        // Fetch societies if token is valid
         const getSocieties = async () => {
             try {
                 const data = await fetchSocieties();
@@ -23,7 +25,7 @@ function Dashboard() {
         };
 
         getSocieties();
-    }, []);
+    }, [navigate]);
 
     if (loading) return <div>Loading societies...</div>;
     if (error) return <div>{error}</div>;
@@ -38,19 +40,13 @@ function Dashboard() {
             </div>
             <div className="society-grid">
                 {societies.map((society) => (
-                    <Link
-                        to={{
-                            pathname: `/society/${society.id}`,
-                            state: { society }, // Send society information with state
-                        }}
-                        key={society.id}
-                    >
+                    <div>
                         <SocietyCard
                             id={society.id}
                             name={society.name}
                             description={society.description}
                         />
-                    </Link>
+                    </div>
                 ))}
             </div>
         </div>
