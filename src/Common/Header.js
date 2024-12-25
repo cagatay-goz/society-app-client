@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Use React Router for navigation
 import {jwtDecode} from 'jwt-decode'; // To decode the token
+import axiosInstance from '../services/axiosInstance'; // Axios instance
 import './Common.css';
 
 function Header() {
     const navigate = useNavigate();
     const token = localStorage.getItem('authToken');
+    const [societyId, setSocietyId] = useState(null); // State to store the society ID
     let userRole = null;
+    let userEmail = null;
 
     if (token) {
         try {
             const decodedToken = jwtDecode(token);
+            userEmail = decodedToken.sub;
             const roles = decodedToken.roles || []; // Extract roles array
             // Define role hierarchy
             const roleHierarchy = ['ROLE_ADMIN', 'ROLE_PRESIDENT', 'ROLE_USER'];
@@ -22,6 +26,23 @@ function Header() {
             navigate('/login'); // Redirect to login if the token is invalid
         }
     }
+
+    useEffect(() => {
+        const fetchSocietyId = async () => {
+            if (userRole === 'ROLE_PRESIDENT') {
+                try {
+                    const response = await axiosInstance.get(`/api/my-society`, {
+                        params: { email: userEmail },
+                    });
+                    setSocietyId(response.data); // Store the society ID
+                } catch (error) {
+                    console.error("Error fetching society ID:", error);
+                }
+            }
+        };
+
+        fetchSocietyId();
+    }, [userRole, userEmail]);
 
     const handleLogout = () => {
         localStorage.removeItem('authToken'); // Remove token
@@ -51,7 +72,7 @@ function Header() {
                             {userRole === 'ROLE_ADMIN' && (
                                 <>
                                     <li>
-                                        <Link to="/reservation-requests">Reservation Requests</Link>
+                                        <Link to="/admin">Reservation Requests</Link>
                                     </li>
                                     <li>
                                         <Link to="/add-society">Add Society</Link>
@@ -61,7 +82,9 @@ function Header() {
                             {userRole === 'ROLE_PRESIDENT' && (
                                 <>
                                     <li>
-                                        <Link to="/society">Society</Link>
+                                        <Link to={`/society/${societyId || ''}`}>
+                                            Society
+                                        </Link>
                                     </li>
                                 </>
                             )}

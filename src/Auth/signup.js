@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './auth.css';
 import axiosInstance from '../services/axiosInstance';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -19,14 +21,11 @@ const Signup = () => {
             
             localStorage.clear();
             const response = await axiosInstance.post("/api/auth/signup", userRegistrationDTO);
-    
-            alert("Signup successful!");
-            console.log("Response:", response.data);
+            navigate("/login");
     
         } catch (error) {
-            console.error("Error during signup:", error.message);
             if (error.response) {
-                alert(`Signup failed: ${error.response.data.message}`);
+                alert(`Signup failed: ${error.response.data}`);
             } else {
                 alert("Signup failed. Please try again later.");
             }

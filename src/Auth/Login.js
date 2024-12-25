@@ -19,12 +19,10 @@ const Login = () => {
     
             localStorage.setItem("authToken", token);
     
-            alert(`Welcome, ${userEmail}!`);
-            navigate("/"); // Redirect to the dashboard page
+            navigate("/"); 
         } catch (error) {
-            console.error("Error during login:", error.message);
             if (error.response) {
-                alert(`Login failed: ${error.response.data.message}`);
+                alert(`Login failed: ${error.response.data}`);
             } else {
                 alert("Login failed. Please try again later.");
             }

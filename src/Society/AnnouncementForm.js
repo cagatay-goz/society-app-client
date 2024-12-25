@@ -1,19 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createAnnouncement } from "../services/api";
+import axiosInstance from "../services/axiosInstance"; // Axios instance for fetching society ID
 import "./AnnouncementForm.css";
 
 function AnnouncementForm() {
     const [announcement, setAnnouncement] = useState({
-        societyId: "", // Fixed naming for consistency
         title: "",
         content: "",
         date: "",
         location: "",
     });
+    const [societyId, setSocietyId] = useState(null); // Fetch society ID dynamically
     const [file, setFile] = useState(null);
     const [imageUrl, setImageUrl] = useState(
-        "https://cng495awsbucket.s3.eu-central-1.amazonaws.com/erayFoto.jpeg"
+        ""
     ); // Default URL is set
+    const [error, setError] = useState(null);
+
+    // Fetch the society ID for the logged-in president
+    useEffect(() => {
+        const fetchSocietyId = async () => {
+            try {
+                const token = localStorage.getItem("authToken");
+                if (!token) {
+                    throw new Error("User is not authenticated.");
+                }
+
+                const email = JSON.parse(atob(token.split(".")[1])).sub; // Decode email from token
+                const response = await axiosInstance.get("/api/my-society", {
+                    params: { email },
+                });
+
+                setSocietyId(response.data);
+            } catch (err) {
+                console.error("Error fetching society ID:", err);
+                setError("Failed to fetch society ID. Please try again later.");
+            }
+        };
+
+        fetchSocietyId();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,8 +56,13 @@ function AnnouncementForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!societyId) {
+            alert("Society ID is not available. Please try again later.");
+            return;
+        }
+
         const formData = new FormData();
-        formData.append("societyId", announcement.societyId); // Ensure backend matches 'societyId'
+        formData.append("societyId", societyId); // Use dynamically fetched society ID
         formData.append("title", announcement.title);
         formData.append("content", announcement.content);
         formData.append("date", announcement.date);
@@ -55,20 +86,18 @@ function AnnouncementForm() {
         }
     };
 
+    if (error) {
+        return <div className="error-message">{error}</div>;
+    }
+
+    if (!societyId) {
+        return <div>Loading society information...</div>;
+    }
+
     return (
         <div className="announcement-form">
             <h2>Post New Announcement</h2>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
-                <label htmlFor="societyId">Society ID</label>
-                <input
-                    type="text"
-                    id="societyId"
-                    name="societyId"
-                    value={announcement.societyId}
-                    onChange={handleChange}
-                    placeholder="Enter society ID"
-                    required
-                />
                 <label htmlFor="title">Event Name</label>
                 <input
                     type="text"
