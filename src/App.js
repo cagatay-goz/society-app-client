@@ -12,6 +12,7 @@ import AnnouncementForm from "./Society/AnnouncementForm";
 import EditEvent from "./Society/EditEvent";
 import SocietyAddForm from "./Society/SocietyAddForm";
 import JoinRequestsPage from "./Society/JoinRequestsPage";
+import MySocietiesPage from "./Society/MySocietiesPage";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path="/" element={<Dashboard/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/signup" element={<Signup/>}/>
+                    <Route path="/my-societies" element={<MySocietiesPage/>} />
                     <Route path="/society/:id" element={<SocietyPage/>}/>
                     <Route path="/add-society" element={<SocietyAddForm/>}/>
                     <Route path="/bookingForm" element={<BookingForm/>}/>
