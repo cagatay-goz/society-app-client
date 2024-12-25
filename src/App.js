@@ -10,6 +10,7 @@ import BookingForm from "./Society/BookingForm";
 import AdminPage from "./Society/AdminPage";
 import AnnouncementForm from "./Society/AnnouncementForm";
 import EditEvent from "./Society/EditEvent";
+import SocietyAddForm from "./Society/SocietyAddForm";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/signup" element={<Signup/>}/>
                     <Route path="/society/:id" element={<SocietyPage/>}/>
+                    <Route path="/add-society" element={<SocietyAddForm/>}/>
                     <Route path="/bookingForm" element={<BookingForm/>}/>
                     <Route path="/admin" element={<AdminPage/>}/>
                     <Route path="/announcementForm" element={<AnnouncementForm/>}/>

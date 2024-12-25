@@ -11,7 +11,11 @@ function Header() {
     if (token) {
         try {
             const decodedToken = jwtDecode(token);
-            userRole = decodedToken.roles && decodedToken.roles[0]; // Get the first role
+            const roles = decodedToken.roles || []; // Extract roles array
+            // Define role hierarchy
+            const roleHierarchy = ['ROLE_ADMIN', 'ROLE_PRESIDENT', 'ROLE_USER'];
+            // Find the highest-priority role
+            userRole = roles.sort((a, b) => roleHierarchy.indexOf(a) - roleHierarchy.indexOf(b))[0];
         } catch (error) {
             console.error("Invalid token:", error);
             localStorage.removeItem('authToken'); // Clear invalid token
@@ -47,7 +51,10 @@ function Header() {
                             {userRole === 'ROLE_ADMIN' && (
                                 <>
                                     <li>
-                                        <Link to="/event-requests">Event Requests</Link>
+                                        <Link to="/reservation-requests">Reservation Requests</Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/add-society">Add Society</Link>
                                     </li>
                                 </>
                             )}
@@ -59,7 +66,7 @@ function Header() {
                                 </>
                             )}
                             <li>
-                                        <div onClick={handleLogout}>Logout</div>
+                                <div onClick={handleLogout}>Logout</div>
                             </li>
                         </>
                     ) : (
