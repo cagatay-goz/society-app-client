@@ -12,8 +12,8 @@ const Signup = () => {
             alert("Passwords do not match!");
             return;
         }
-        // Add your signup logic here
-        console.log("Signing up with:", { email, password });
+        
+        
     };
 
     return (
